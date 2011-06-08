@@ -1,0 +1,26 @@
+= redis-cache
+
+* https://github.com/antage/redis-cache
+
+== DESCRIPTION
+
+ActiveSupport cache adapter for Redis.
+
+== SYNOPSIS
+
+=== RUBY EXAMPLE
+
+  require "active_support"
+
+  cache = ActiveSupport::Cache.lookup_store :redis_store, { :host => "localhost", :port => "6379", :db => 1, :namespace => "test-ns" }
+  cache.write("abc", "test") # you can use options :expires_in and :raw
+  cache.read("abc")          # should be "test"
+
+=== RAILS EXAMPLE
+
+  # config/environments/production.rb:
+  Rails3::Application.configure do
+    ...
+    config.cache_store = :redis_store, { :host => "localhost", :port => 6379, :db => 1, :namespace => "rails_app" }
+    ...
+  end
