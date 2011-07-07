@@ -52,6 +52,15 @@ describe "ActiveSupport::Cache::RedisStore" do
         store.read("abc").should == "test"
       end
     end
+
+    context "without any keys, #read_multi" do
+      before(:each) { store.clear }
+      subject { lambda { store.read_multi("a1", "a2", "a3") } }
+
+      it "should not raise any errors" do
+        should_not raise_error
+      end
+    end
     
     context "with keys 'a1', 'a2', 'a3', #read_multi('a1', 'a2', 'a3')" do
       before(:each) do

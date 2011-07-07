@@ -1,3 +1,7 @@
+=== 1.0.0.rc2 2011-07-07
+
+  * Fixed bug: #read_multi with non-existing keys raises error.
+
 === 1.0.0.rc1 2011-06-08
 
   * Initial release.

@@ -51,14 +51,14 @@ module ActiveSupport
         values = {}
         keys_to_names.keys.zip(raw_values).each do |key, value|
           entry = deserialize_entry(value)
-          values[keys_to_names[key]] = entry.value unless entry.expired?
+          values[keys_to_names[key]] = entry.value unless entry.nil? || entry.expired?
         end
         values
       end
 
       protected
         def read_entry(key, options)
-          deserialize_entry @redis.get(key)
+          deserialize_entry(@redis.get(key))
         end
 
         def write_entry(key, entry, options)
