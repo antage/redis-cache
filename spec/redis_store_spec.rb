@@ -107,7 +107,7 @@ describe "ActiveSupport::Cache::RedisStore" do
 
     context "with raw key 'abc' == 5" do
       before(:each) do
-        store.write("abc", 5, :raw => true)
+        store.write("abc", 5, :raw => true, :expires_in => 1.hour)
       end
 
       it "#increment('abc', 2) should return 7 and change key 'abc' to 7" do
@@ -115,18 +115,8 @@ describe "ActiveSupport::Cache::RedisStore" do
         store.read("abc").to_i.should == 7
       end
 
-      it "#increment('abc', 2, :expires_in => 1.hour) should return 7 and change key 'abc' to 7" do
-        store.increment("abc", 2, :expires_in => 1.hour).should == 7
-        store.read("abc").to_i.should == 7
-      end
-
       it "#decrement('abc', 2) should return 3 and change key 'abc' to 3" do
         store.decrement("abc", 2).should == 3
-        store.read("abc").to_i.should == 3
-      end
-
-      it "#decrement('abc', 2, :expires_in => 1.hour) should return 3 and change key 'abc' to 3" do
-        store.decrement("abc", 2, :expires_in => 1.hour).should == 3
         store.read("abc").to_i.should == 3
       end
     end
