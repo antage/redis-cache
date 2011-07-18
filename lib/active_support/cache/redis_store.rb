@@ -29,16 +29,26 @@ module ActiveSupport
 
       def increment(name, amount = 1, options = nil)
         options = merged_options(options)
+        expires_in = options[:expires_in].to_i
         response = instrument(:increment, name, :amount => amount) do
-          @redis.incrby(namespaced_key(name, options), amount)
+          r = @redis.incrby(namespaced_key(name, options), amount)
+          if expires_in > 0
+            @redis.expire(namespaced_key(name, options), expires_in)
+          end
+          r
         end
         response
       end
 
       def decrement(name, amount = 1, options = nil)
         options = merged_options(options)
+        expires_in = options[:expires_in].to_i
         response = instrument(:decrement, name, :amount => amount) do
-          @redis.decrby(namespaced_key(name, options), amount)
+          r = @redis.decrby(namespaced_key(name, options), amount)
+          if expires_in > 0
+            @redis.expire(namespaced_key(name, options), expires_in)
+          end
+          r
         end
         response
       end
