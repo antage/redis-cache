@@ -16,6 +16,10 @@ module ActiveSupport
         options = { :logger => self.class.logger }.merge(options || {})
         @redis = ::Redis.new(options)
 
+        if (@redis.info["redis_version"].split(".").map { |x| x.to_i } <=> [2, 1, 3]) < 0
+          $stderr.puts "Redis server with version < 2.1.3 has bug with increment/decrement on values with expiring time! Please upgrade Redis server or don't use increment/decrement methods with :expires_in option."
+        end
+
         extend Strategy::LocalCache
       end
 
@@ -30,10 +34,11 @@ module ActiveSupport
       def increment(name, amount = 1, options = nil)
         options = merged_options(options)
         expires_in = options[:expires_in].to_i
+        redis_key = namespaced_key(name, options)
         response = instrument(:increment, name, :amount => amount) do
-          r = @redis.incrby(namespaced_key(name, options), amount)
+          r = @redis.incrby(redis_key, amount)
           if expires_in > 0
-            @redis.expire(namespaced_key(name, options), expires_in)
+            @redis.expire(redis_key, expires_in)
           end
           r
         end
@@ -43,10 +48,11 @@ module ActiveSupport
       def decrement(name, amount = 1, options = nil)
         options = merged_options(options)
         expires_in = options[:expires_in].to_i
+        redis_key = namespaced_key(name, options)
         response = instrument(:decrement, name, :amount => amount) do
-          r = @redis.decrby(namespaced_key(name, options), amount)
+          r = @redis.decrby(redis_key, amount)
           if expires_in > 0
-            @redis.expire(namespaced_key(name, options), expires_in)
+            @redis.expire(redis_key, expires_in)
           end
           r
         end
