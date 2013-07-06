@@ -1,3 +1,7 @@
+=== 1.0.2 2013-07-07
+
+  * Added Rails 4 support.
+
 === 1.0.1 2011-07-18
 
   * Fixed bug: #increment and #decrement should respect :expires_in option.
