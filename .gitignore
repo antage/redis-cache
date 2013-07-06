@@ -1,5 +1,7 @@
-*.gem
-.bundle
-Gemfile.lock
-pkg/*
-.rvmrc
+/*.gem
+/.bundle
+/Gemfile.lock
+/.gems
+/pkg
+/.rvmrc
+/.ruby-version
