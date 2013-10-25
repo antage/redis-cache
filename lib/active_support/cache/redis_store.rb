@@ -14,6 +14,9 @@ module ActiveSupport
         super(options)
 
         options = { :logger => self.class.logger }.merge(options || {})
+        if defined?(Hiredis)
+          options = { :driver => :hiredis }.merge(options || {})
+        end
         @redis = ::Redis.new(options)
 
         if (@redis.info["redis_version"].split(".").map { |x| x.to_i } <=> [2, 1, 3]) < 0
@@ -24,7 +27,11 @@ module ActiveSupport
       end
 
       def reconnect
-        @redis and @redis.reconnect
+        @redis and @redis.client.reconnect
+      end
+
+      def disconnect
+        @redis and @redis.client.disconnect
       end
 
       def clear(options = nil)
