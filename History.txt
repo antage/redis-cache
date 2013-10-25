@@ -1,3 +1,5 @@
+=== 1.1.0 2013-10-25
+
   * Autodetected and used 'hiredis' gem.
   * Added #disconnect method.
   * Fixed bug in #reconnect method.
